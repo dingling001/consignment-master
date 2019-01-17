@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+
+<style>
+    .add-btn{
+        color: #1ab394;
+        display: inline-block;
+        font-size: 36px;
+        cursor: pointer;
+        float: left;
+    }
+</style>
+<div class="wrapper wrapper-content ">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <form class="form-horizontal m-t" id="signupForm">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">类型名称：</label>
+                            <div class="col-sm-8">
+                                <input id="banName" name="banName" class="form-control"
+                                       type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">类型图片：</label>
+                            <div class="col-sm-8 over-flow">
+                                <span class="fa fa-plus-square add-btn" id="shopImgBtn" style=""></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">图片预览：</label>
+                            <input id="fileId" type="hidden">
+                            <div class="col-sm-8">
+                                <img style="" id="showImg" class="img-thumbnail">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-3">
+                                <button type="button" class="btn btn-primary" id="commit">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div th:include="include::footer"></div>
+<script th:inline="javascript"> var appPrefix = [[${prefix}]]; </script>
+<script type="text/javascript" th:src="@{${prefix} + '/js/appjs/system/goods/type/add.js'}"  ></script>
+</body>
+</html>

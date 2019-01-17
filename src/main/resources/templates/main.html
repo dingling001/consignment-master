@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="include::header"></head>
+<style>
+    .box {
+        width: 400px;
+        height: 300px;
+        margin: 30px auto;
+        position: relative;
+    }
+    .box .ball {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        margin-left: -70px;
+        background: -webkit-linear-gradient(top,#fff,#999);
+        box-shadow: inset 0 0 30px #999,inset 0 -15px 70px #999;
+        -webkit-animation: jump 1s ease-in-out infinite;
+        z-index: 1;
+    }
+    .box .ball:after {
+        content: " ";
+        display: block;
+        width: 70px;
+        height: 30px;
+        border-radius: 50%;
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        margin-left: -35px;
+        background: -webkit-linear-gradient(#ffffff,#ccc);
+    }
+    .shadow {
+        width: 80px;
+        height: 60px;
+        border-radius: 5%;
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        margin-left: -40px;
+        background: rgba(20,20,20,.1);
+        box-shadow: 0 0 25px 20px rgba(20,20,20,.1);
+        transform: scaleY(.3);
+        -webkit-animation: shrink 1s infinite;
+    }
+    @-webkit-keyframes jump {
+        0% {
+            top: 0;
+            -webkit-animation-timing-function: ease-in;
+        }
+        65% {
+            top: 160px;
+            height: 140px;
+        }
+        75% {
+            height: 120px;
+        }
+        100% {
+            top: 0;
+            height: 140px;
+        }
+    }
+    @-webkit-keyframes shrink {
+        0% {
+            width: 90px;
+            height: 60px;
+            -webkit-animation-timing-function: ease-in;
+        }
+        65% {
+            width: 10px;
+            height: 5px;
+            margin-left: -5px;
+            background: rgba(20,20,20,.3);
+            box-shadow: 0 0 25px 20px rgba(20,20,20,.3);
+        }
+        100% {
+            width: 90px;
+            height: 60px;
+            background: rgba(20,20,20,.1);
+            box-shadow: 0 0 25px 20px rgba(20,20,20,.1);
+        }
+    }
+</style>
+<body>
+<div class="panel panel-default" style="width: 100%">
+    <!--<img  th:src="@{${prefix} + '/img/map.jpg'}"  style="display: block;width: 100%">-->
+    <h1 style="padding: 50px">欢迎来到寄售小程序后台管理系统</h1>
+    <!--<div class="panel-heading">了解BootDo</div>-->
+    <!--<div style="padding: 10px 0 20px 10px;">-->
+        <!--<h3>&nbsp;&nbsp;&nbsp;项目介绍</h3>-->
+        <!--<ul>-->
+            <!--<li>面向学习型的开源框架，简洁高效，减少过渡封装，展现技术本质</li>-->
+            <!--<li>Springboot作为基础框架，使用mybatis作为持久层框架</li>-->
+            <!--<li>使用官方推荐的thymeleaf做为模板引擎，shiro作为安全框架,主流技术，“一网打尽”</li>-->
+            <!--<li>极简配置，一键前后台代码生成</li>-->
+        <!--</ul>-->
+
+        <!--<h3>&nbsp;&nbsp;&nbsp;获取源码</h3>-->
+        <!--<ul>-->
+            <!--<li>Github地址：<a href="https://github.com/lcg0124/bootdo.git" th:href="@{https://github.com/lcg0124/bootdo.git}" target="_blank">https://github.com/lcg0124/bootdo.git</a></li>-->
+            <!--<li>Oschina地址：<a href="https://gitee.com/lcg0124/bootdo.git" target="_blank">https://gitee.com/lcg0124/bootdo.git</a></li>-->
+        <!--</ul>-->
+
+        <!--<h3>&nbsp;&nbsp;&nbsp;官方QQ群</h3>-->
+        <!--<ul>-->
+            <!--<li>点击链接加入群【BootDo交流群】：<a href="https://jq.qq.com/?_wv=1027&k=5EYXfiZ">669039323(满)</a></li>-->
+            <!--<li>点击链接加入群聊【BootDo交流二群】：<a href="https://jq.qq.com/?_wv=1027&k=5M659N4">614726589</a></li>-->
+        <!--</ul>-->
+    <!--</div>-->
+
+<!--    <div class="box">
+        <div class="ball"></div>
+        <div class="shadow"></div>
+    </div>
+    <div id="div" style="margin-left: 20px">
+        这个页面该怎么设计呢？？？？
+    </div>-->
+</div>
+<div th:include="include::footer"></div>
+<script>
+
+
+/*    $(function(){
+        $('#div').animate({
+            backgroundColor:'red',
+            fontSize:'50px',
+            color:'yellow',
+            'margin-left':'200px'
+        },1500)
+    })*/
+</script>
+</body>
+</html>

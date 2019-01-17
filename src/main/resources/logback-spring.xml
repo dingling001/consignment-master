@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <!-- 存放日志文件路径 -->
+    <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
+    <!--本地-->
+    <!--<property name="logHome" value="F:/logs/concert-ticket-activity" />-->
+    <property name="logHome" value="/home/zity/workspace/marketing-business/consignment-master/logs" />
+    <!--
+          说明：
+          1、日志级别及文件
+              日志记录采用分级记录，级别与日志文件名相对应，不同级别的日志信息记录到不同的日志文件中
+              例如：error级别记录到log_error_xxx.log或log_error.log（该文件为当前记录的日志文件），而log_error_xxx.log为归档日志，
+              日志文件按日期记录，同一天内，若日志文件大小等于或大于2M，则按0、1、2...顺序分别命名
+              例如log-level-2013-12-21.0.log
+              其它级别的日志也是如此。
+          2、文件路径
+              若开发、测试用，在Eclipse中运行项目，则到Eclipse的安装路径查找logs文件夹，以相对路径../logs。
+              若部署到Tomcat下，则在Tomcat下的logs文件中
+          3、Appender
+              FILEERROR对应error级别，文件名以log-error-xxx.log形式命名
+              FILEWARN对应warn级别，文件名以log-warn-xxx.log形式命名
+              FILEINFO对应info级别，文件名以log-info-xxx.log形式命名
+              FILEDEBUG对应debug级别，文件名以log-debug-xxx.log形式命名
+              CONSOLE将日志信息输出到控制上，为方便开发测试使用
+       -->
+    <!-- %m输出的信息,%p日志级别,%t线程名,%d日期,%c类的全名,,,, -->
+    <!-- ch.qos.logback.core.ConsoleAppender 控制台输出 -->
+    <appender name="consoleLog" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+            <pattern>%d [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </layout>
+    </appender>
+    <!-- INFO级别 -->
+    <appender name="fileInfoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 级别过滤器：如果只是想要INFO级别的日志，只是过滤info还是会输出ERROR日志，因为ERROR的级别高，
+        所以我们使用下面的策略，可以避免输出ERROR的日志-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <!-- 过滤ERROR -->
+            <level>ERROR</level>
+            <!-- 匹配到就禁止 -->
+            <onMatch>DENY</onMatch>
+            <!-- 没有匹配到就允许 -->
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <encoder>
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %msg：日志消息，%n是换行符 -->
+            <pattern>%d [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+        <!--日志名称，如果没有File 属性，那么只会使用FileNamePattern的文件路径规则,如果同时有<File>和<FileNamePattern>，
+        那么当天日志是<File>，明天会自动把今天的日志改名为今天的日期。即<File> 的日志都是当天的。-->
+        <!-- 根据时间来制定滚动策略 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--路径-->
+            <fileNamePattern>${logHome}/%d/info/info.log</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+    <!-- ERROR级别-->
+    <appender name="fileErrorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--如果只是想要 ERROR 级别的日志，那么需要过滤一下，默认是 INFO 级别的，ThresholdFilter-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+            <pattern>%d [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+        <!-- 根据时间来制定滚动策略 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--路径-->
+            <fileNamePattern>${logHome}/%d/error/error.log</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+    <root level="info">
+        <appender-ref ref="consoleLog" />
+        <appender-ref ref="fileInfoLog" />
+        <appender-ref ref="fileErrorLog" />
+    </root>
+
+</configuration>

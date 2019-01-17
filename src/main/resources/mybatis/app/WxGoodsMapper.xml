@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.app.dao.WxGoodsDao">
+
+    <select id="getType" resultType="com.bootdo.app.domain.WxGoodsType">
+       SELECT
+            t.type_id as typeId,
+            t.type_parent as  typeParent,
+            t.type_name as typeName,
+            t.type_img as typeImg
+        FROM wx_goods_type t
+        where t.type_id = #{typeId}
+    </select>
+
+    <delete id="removeType" >
+        delete from wx_goods_type
+        where type_id = #{typeId}
+    </delete>
+
+    <delete id="removeGoods">
+        delete from wx_goods
+        where goods_id = #{goodsId}
+    </delete>
+
+    <update id="updateGoods" parameterType="com.bootdo.app.domain.WxGoods">
+        update wx_goods
+        <set>
+            <if test="goodsName != null">
+                goods_name = #{goodsName},
+            </if>
+            <if test="goodsType != null">
+                goods_type = #{goodsType},
+            </if>
+            <if test="goodsImg != null">
+                goods_img = #{goodsImg},
+            </if>
+            <if test="goodsDetail != null">
+                goods_detail = #{goodsDetail},
+            </if>
+            <if test="goodsDesc != null">
+                goods_desc = #{goodsDesc},
+            </if>
+            <if test="goodsText != null">
+                goods_text = #{goodsText},
+            </if>
+            <if test="goodsCode != null">
+                goods_code = #{goodsCode},
+            </if>
+            <if test="goodsBrand != null">
+                goods_brand = #{goodsBrand},
+            </if>
+            <if test="goodsTop != null">
+                goods_top = #{goodsTop},
+            </if>
+            <if test="goodsCost != null">
+                goods_cost = #{goodsCost},
+            </if>
+            <if test="goodsPrice != null">
+                goods_price = #{goodsPrice},
+            </if>
+            <if test="goodsStatus != null">
+                goods_status = #{goodsStatus},
+            </if>
+            <if test="goodsCarousel != null">
+                goods_carousel = #{goodsCarousel},
+            </if>
+        </set>
+        where goods_id = #{goodsId}
+    </update>
+
+
+    <update id="updateType" parameterType="com.bootdo.app.domain.WxGoodsType">
+        update wx_goods_type
+        <set>
+
+            <if test="typeParent != null">
+                type_parent = #{typeParent},
+            </if>
+            <if test="typeName != null">
+                type_name = #{typeName},
+            </if>
+            <if test="typeImg != null">
+                type_img = #{typeImg},
+            </if>
+        </set>
+        where type_id = #{typeId}
+    </update>
+
+    <insert id="saveGoods" parameterType="com.bootdo.app.domain.WxGoods" useGeneratedKeys="true" keyProperty="goodsId">
+        insert into wx_goods (
+            goods_name,
+            goods_type,
+            goods_img,
+            goods_detail,
+            goods_desc,
+            goods_text,
+            goods_code,
+            goods_brand,
+            goods_top,
+            goods_cost,
+            goods_price,
+            goods_status,
+            goods_carousel
+
+        )values (
+            #{goodsName},
+            #{goodsType},
+            #{goodsImg},
+            #{goodsDetail},
+            #{goodsDesc},
+            #{goodsText},
+            #{goodsCode},
+            #{goodsBrand},
+            #{goodsTop},
+            #{goodsCost},
+            #{goodsPrice},
+            #{goodsStatus},
+            #{goodsCarousel}
+        )
+    </insert>
+
+    <insert id="saveType" parameterType="com.bootdo.app.domain.WxGoodsType" useGeneratedKeys="true" keyProperty="typeId">
+        insert into wx_goods_type (
+            type_parent,
+            type_name,
+            type_img
+        ) values (
+            #{typeParent},
+            #{typeName},
+            #{typeImg}
+        )
+    </insert>
+
+
+    <resultMap id="wx_goods_type" type="com.bootdo.app.domain.WxGoodsType">
+        <id column="type_id" property="typeId" jdbcType="INTEGER" />
+        <result column="type_parent" property="typeParent" jdbcType="INTEGER" />
+        <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+        <result column="type_img" property="typeImg" jdbcType="VARCHAR" />
+        <collection property="list" javaType="java.util.List" ofType="com.bootdo.app.domain.WxGoods">
+            <id column="goods_id" property="goodsId" jdbcType="INTEGER" />
+            <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+            <result column="goods_img" property="goodsImg" jdbcType="VARCHAR" />
+            <result column="goods_desc" property="goodsDesc" jdbcType="VARCHAR" />
+            <result column="goods_cost" property="goodsCost" jdbcType="VARCHAR" />
+            <result column="goods_price" property="goodsPrice" jdbcType="VARCHAR" />
+        </collection>
+    </resultMap>
+
+    <select id="countTypes" resultType="java.lang.Integer">
+        select count(*) from wx_goods_type
+
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="getTypes" resultType="com.bootdo.app.domain.WxGoodsType">
+       SELECT
+            t.type_id as typeId,
+            t.type_parent as  typeParent,
+            t.type_name as typeName,
+            t.type_img as typeImg
+        FROM wx_goods_type t
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+
+    <select id="countGoods" resultType="java.lang.Integer">
+        select count(*) from wx_goods
+        <where>
+            <if test="type != null ">
+                and goods_type = #{type}
+            </if>
+            <if test="text != null">
+                and (
+                goods_name like concat('%',#{text},'%') or
+                goods_text like concat('%',#{text},'%') or
+                goods_brand like concat('%',#{text},'%') or
+                goods_code like concat('%',#{text},'%')
+                )
+            </if>
+        </where>
+
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="getGoodsBrand" resultType="java.lang.String">
+        select distinct goods_brand from wx_goods
+        where goods_type = #{typeId}
+    </select>
+
+    <select id="getGoodsList" resultType="com.bootdo.app.domain.WxGoods">
+        SELECT
+            goods_id AS goodsId,
+            goods_name AS goodsName,
+            goods_type AS goodsType,
+            goods_img AS goodsImg,
+            goods_detail AS goodsDetail,
+            goods_desc AS goodsDesc,
+            goods_text AS goodsText,
+            goods_code AS goodsCode,
+            goods_brand AS goodsBrand,
+            goods_top AS goodsTop,
+            goods_cost AS goodsCost,
+            goods_price AS goodsPrice,
+            goods_status AS goodsStatus,
+            goods_carousel AS goodsCarousel
+        FROM wx_goods
+        <where>
+
+            <if test="brand != null and brand !='' ">
+                and goods_brand like concat('%',#{brand},'%')
+            </if>
+            <if test="type != null and type !='' ">
+                and goods_type = #{type}
+            </if>
+            <if test="text != null and text !=''">
+                and (
+                    goods_name like concat('%',#{text},'%') or
+                    goods_text like concat('%',#{text},'%') or
+                    goods_brand like concat('%',#{text},'%') or
+                    goods_code like concat('%',#{text},'%')
+                )
+            </if>
+        </where>
+        <if test='priceType != null and priceType != "" and priceType == "1"'>
+            order by goods_price desc
+        </if>
+        <if test='priceType != null and priceType != "" and priceType == "2"'>
+            order by goods_price asc
+        </if>
+
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+
+    <select id="getTypeList" resultMap="wx_goods_type">
+        SELECT
+            t.type_id,
+            t.type_parent,
+            t.type_name,
+            t.type_img,
+            g.goods_id ,
+            g.goods_name ,
+            g.goods_img ,
+            g.goods_desc ,
+            g.goods_cost ,
+            g.goods_price
+        FROM wx_goods_type t,wx_goods g
+        WHERE t.type_id = g.goods_type AND g.goods_status = '0'
+    </select>
+
+    <select id="getWxGoods" resultType="com.bootdo.app.domain.WxGoods">
+        SELECT
+            goods_id AS goodsId,
+            goods_name AS goodsName,
+            goods_type AS goodsType,
+            goods_img AS goodsImg,
+            goods_detail AS goodsDetail,
+            goods_desc AS goodsDesc,
+            goods_text AS goodsText,
+            goods_code AS goodsCode,
+            goods_brand AS goodsBrand,
+            goods_top AS goodsTop,
+            goods_cost AS goodsCost,
+            goods_price AS goodsPrice,
+            goods_status AS goodsStatus,
+            goods_carousel AS goodsCarousel
+        FROM wx_goods
+        WHERE goods_id = #{goodsId}
+
+    </select>
+
+    <select id="getTopGoods" resultType="com.bootdo.app.domain.WxGoods">
+        SELECT
+             g.goods_id AS goodsId,
+             g.goods_name AS goodsName,
+             g.goods_img AS goodsImg,
+             g.goods_desc AS goodsDesc,
+             g.goods_cost AS goodsCost,
+             g.goods_price AS goodsPrice
+        FROM wx_goods g
+        WHERE g.goods_top = '1'
+    </select>
+
+</mapper>

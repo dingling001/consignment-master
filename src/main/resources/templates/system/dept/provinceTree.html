@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+
+		<div class="row">
+			<div class="col-sm-12">
+
+				<div class="ibox-content">
+					<div id="deptTree"></div>
+				</div>
+				<div class="form-group hidden">
+					<div class="col-sm-12 col-sm-offset-12">
+						<button type="submit" class="btn btn-primary">提交</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:include="include :: footer"></div>
+
+
+	<script th:inline="javascript"> var appPrefix = [[${prefix}]]; </script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			getTreeData()
+		});
+		function getTreeData() {
+			$.ajax({
+				type : "GET",
+				url :appPrefix + "/system/sysDept/treeProvince",
+				success : function(tree) {
+					loadTree(tree);
+				}
+			});
+		}
+		function loadTree(tree) {
+			$('#deptTree').jstree({
+				'core' : {
+					'data' : tree
+				},
+				"plugins" : [ "search" ]
+			});
+			$('#deptTree').jstree().open_all();
+		}
+		$('#deptTree').on("changed.jstree", function(e, data) {
+			if(data.node.id!=-1){
+
+              //  var a = $(this).find("li[aria-expanded=true][aria-level='2']").find("a");
+                //console.log("li = " , li);
+               // var p = li[0];
+                //console.log(p);
+/*				var p = li.eq(0).text();
+				var c = li.eq(1).text();
+				console.log("p = " + p);
+				console.log("c = " + c);*/
+
+      /*          var p = $(this).find("li[aria-expanded=true][aria-level='2']").attr("id");
+
+
+                var c = $(this).find("li[aria-expanded=true][aria-level='3']").attr("id");*/
+
+
+
+                var name = $.trim(changeCityName($(this),data.node.text));
+                //console.log("name ---> " + name);
+
+                var number = changeCityNumber($(this),data.node.id);
+                //console.log("number ===> " , number);
+
+
+				parent.loadProvince(number,name);
+				var index = parent.layer.getFrameIndex(window.name); // 获取窗口索引
+				parent.layer.close(index);
+			}
+			
+		});
+
+        function changeCityNumber(e,number){
+            var p = e.find("li[aria-expanded=true][aria-level='2']").attr("id");
+            var c = e.find("li[aria-expanded=true][aria-level='3']").attr("id");
+
+            if(p == undefined){
+                return [number,'0','0'];
+            }
+
+            if(p != undefined && c == undefined){
+                return [p,number,'0'];
+            }
+
+            return [p,c,number];
+
+        }
+
+        function changeCityName(e,name){
+
+            var p = e.find("li[aria-expanded=true][aria-level='2']").children("a").text();
+            var c = e.find("li[aria-expanded=true][aria-level='3']").children("a").text();
+            if(p == undefined){
+                return name;
+            }
+
+            if(p != undefined && c == undefined){
+                return p + "  " + name;
+            }
+
+            return p + "  " + c + "  " + name;
+        }
+		
+	</script>
+</body>
+
+</html>

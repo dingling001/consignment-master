@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.system.dao.UserDao">
+    <sql id="user_base">
+        `user_id`,
+        `username`,
+        `name`,
+        `password`,
+        `dept_id`,
+        `email`,
+        `mobile`,
+        `status`,
+        `user_id_create`,
+        `gmt_create`,
+        `gmt_modified`,
+        `sex`,
+        `birth`,
+        `pic_id`,
+        `live_address`,
+        `hobby`,
+        `province`,
+        `city`,
+        `district`,
+        `bank_name`,
+        `dev_no`,
+        `remark`,
+        `unique_no`,
+        `deadline`,
+        `bank_address`,
+        `is_delete`,
+        `city_number`
+    </sql>
+
+    <select id="getByAccountPassword" resultType="com.bootdo.system.domain.UserDO">
+        SELECT
+            <include refid="user_base" />
+        FROM sys_user
+        WHERE username = #{username} AND password = #{password}
+    </select>
+
+    <select id="get" resultType="com.bootdo.system.domain.UserDO">
+        SELECT
+            <include refid="user_base" />
+        FROM sys_user
+        WHERE user_id = #{value}
+    </select>
+
+
+    <select id="devCount" resultType="int" parameterType="java.util.Map">
+        SELECT COUNT(*) FROM sys_user
+        <where>
+            1=1 and is_delete = '0' AND  user_id != 1 AND  user_id != 2 AND dev_no != ''
+            <if test="text != null and text != ''">
+                and (
+                    username LIKE CONCAT(CONCAT('%', #{text}),'%')
+                    or `name` LIKE CONCAT(CONCAT('%', #{text}),'%')
+                    or bank_name LIKE CONCAT(CONCAT('%', #{text}),'%')
+                    or bank_address LIKE CONCAT(CONCAT('%', #{text}),'%')
+                    or dev_no LIKE CONCAT(CONCAT('%', #{text}),'%')
+                    or remark LIKE CONCAT(CONCAT('%', #{text}),'%')
+                )
+            </if>
+            <if test="list != null">
+                AND dept_id in
+                <foreach collection="list" close=")" separator="," index="index" item="item" open="(">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="devList" parameterType="java.util.Map" resultType="com.bootdo.system.domain.UserDO">
+        select
+            <include refid="user_base" />
+        from sys_user
+        <where>
+            1 = 1 and is_delete = '0' AND  user_id != 1 AND  user_id != 2 AND dev_no != ''
+            <if test="text != null and text != ''">
+                and (
+                username LIKE CONCAT(CONCAT('%', #{text}),'%')
+                or `name` LIKE CONCAT(CONCAT('%', #{text}),'%')
+                or bank_name LIKE CONCAT(CONCAT('%', #{text}),'%')
+                or bank_address LIKE CONCAT(CONCAT('%', #{text}),'%')
+                or dev_no LIKE CONCAT(CONCAT('%', #{text}),'%')
+                or remark LIKE CONCAT(CONCAT('%', #{text}),'%')
+                )
+            </if>
+            <if test="list != null">
+                and dept_id in
+                <foreach collection="list" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by user_id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="listAuthUsers" parameterType="java.util.List" resultType="com.bootdo.system.domain.UserDO">
+        select
+        <include refid="user_base" />
+        from sys_user
+        <where>
+            1 = 1 and is_delete = '0'
+            <if test="text != null and text != ''">
+                and (
+                    username LIKE CONCAT(CONCAT('%', #{text}),'%')
+                    or `name` LIKE CONCAT(CONCAT('%', #{text}),'%')
+                    or bank_name LIKE CONCAT(CONCAT('%', #{text}),'%')
+                    or bank_address LIKE CONCAT(CONCAT('%', #{text}),'%')
+                    or dev_no LIKE CONCAT(CONCAT('%', #{text}),'%')
+                    or remark LIKE CONCAT(CONCAT('%', #{text}),'%')
+                )
+            </if>
+            <if test="list != null">
+                and dept_id in
+                <foreach collection="list" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by user_id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+
+    <select id="list" resultType="com.bootdo.system.domain.UserDO">
+        select
+        <include refid="user_base" />
+        from sys_user
+        <where>
+            <if test="userId != null and userId != ''">and user_id = #{userId}</if>
+            <if test="username != null and username != ''">and username = #{username}</if>
+            <if test="name != null and name != ''">and name = #{name}</if>
+            <if test="password != null and password != ''">and password = #{password}</if>
+            <if test="deptId != null and deptId != ''">and dept_id = #{deptId}</if>
+            <if test="email != null and email != ''">and email = #{email}</if>
+            <if test="mobile != null and mobile != ''">and mobile = #{mobile}</if>
+            <if test="status != null and status != ''">and status = #{status}</if>
+            <if test="userIdCreate != null and userIdCreate != ''">and user_id_create = #{userIdCreate}</if>
+            <if test="gmtCreate != null and gmtCreate != ''">and gmt_create = #{gmtCreate}</if>
+            <if test="gmtModified != null and gmtModified != ''">and gmt_modified = #{gmtModified}</if>
+            <if test="sex != null and sex != ''">and sex = #{sex}</if>
+            <if test="birth != null and birth != ''">and birth = #{birth}</if>
+            <if test="picId != null and picId != ''">and pic_id = #{picId}</if>
+            <if test="liveAddress != null and liveAddress != ''">and live_address = #{liveAddress}</if>
+            <if test="hobby != null and hobby != ''">and hobby = #{hobby}</if>
+            <if test="province != null and province != ''">and province = #{province}</if>
+            <if test="city != null and city != ''">and city = #{city}</if>
+            <if test="district != null and district != ''">and district = #{district}</if>
+            <if test="bankName != null and bankName != ''">and bank_name = #{bankName}</if>
+            <if test="devNo != null and devNo != ''">and dev_no = #{devNo}</if>
+            <if test="remark != null and remark != ''">and remark = #{remark}</if>
+            <if test="uniqueNo != null and uniqueNo != ''">and unique_no = #{uniqueNo}</if>
+            <if test="deadline != null and deadline != ''">and deadline = #{deadline}</if>
+            <if test="bankAddress != null and bankAddress != ''">and bank_address = #{bankAddress}</if>
+            <if test="isDelete != null and isDelete != ''">and is_delete = #{isDelete}</if>
+            <if test="cityNumber != null and cityNumber != ''">and city_number = #{cityNumber}</if>
+            <if test="list != null">
+                AND 1=1 and is_delete = '0' AND dept_id in
+                <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by user_id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from sys_user
+        <where>
+            1 = 1 and is_delete = '0'
+            <if test="userId != null and userId != ''">and user_id = #{userId}</if>
+            <if test="username != null and username != ''">and username = #{username}</if>
+            <if test="name != null and name != ''">and name = #{name}</if>
+            <if test="password != null and password != ''">and password = #{password}</if>
+            <if test="deptId != null and deptId != ''">and dept_id = #{deptId}</if>
+            <if test="email != null and email != ''">and email = #{email}</if>
+            <if test="mobile != null and mobile != ''">and mobile = #{mobile}</if>
+            <if test="status != null and status != ''">and status = #{status}</if>
+            <if test="userIdCreate != null and userIdCreate != ''">and user_id_create = #{userIdCreate}</if>
+            <if test="gmtCreate != null and gmtCreate != ''">and gmt_create = #{gmtCreate}</if>
+            <if test="gmtModified != null and gmtModified != ''">and gmt_modified = #{gmtModified}</if>
+            <if test="sex != null and sex != ''">and sex = #{sex}</if>
+            <if test="birth != null and birth != ''">and birth = #{birth}</if>
+            <if test="picId != null and picId != ''">and pic_id = #{picId}</if>
+            <if test="liveAddress != null and liveAddress != ''">and live_address = #{liveAddress}</if>
+            <if test="hobby != null and hobby != ''">and hobby = #{hobby}</if>
+            <if test="province != null and province != ''">and province = #{province}</if>
+            <if test="city != null and city != ''">and city = #{city}</if>
+            <if test="district != null and district != ''">and district = #{district}</if>
+            <if test="bankName != null and bankName != ''">and bank_name = #{bankName}</if>
+            <if test="devNo != null and devNo != ''">and dev_no = #{devNo}</if>
+            <if test="remark != null and remark != ''">and remark = #{remark}</if>
+            <if test="uniqueNo != null and uniqueNo != ''">and unique_no = #{uniqueNo}</if>
+            <if test="deadline != null and deadline != ''">and deadline = #{deadline}</if>
+            <if test="bankAddress != null and bankAddress != ''">and bank_address = #{bankAddress}</if>
+            <if test="isDelete != null and isDelete != ''">and is_delete = #{isDelete}</if>
+            <if test="cityNumber != null and cityNumber != ''">and city_number = #{cityNumber}</if>
+        </where>
+    </select>
+
+    <select id="countAuthUsers" resultType="int">
+        SELECT COUNT(*) FROM sys_user
+        <where>
+            1=1 and is_delete = '0' AND  user_id != 1 AND  user_id != 2
+            <if test="text != null and text != ''">
+                and (
+                username LIKE CONCAT(CONCAT('%', #{text}),'%')
+                or `name` LIKE CONCAT(CONCAT('%', #{text}),'%')
+                or bank_name LIKE CONCAT(CONCAT('%', #{text}),'%')
+                or bank_address LIKE CONCAT(CONCAT('%', #{text}),'%')
+                or dev_no LIKE CONCAT(CONCAT('%', #{text}),'%')
+                or remark LIKE CONCAT(CONCAT('%', #{text}),'%')
+                )
+            </if>
+            <if test="list != null">
+                AND dept_id in
+                <foreach collection="list" close=")" separator="," index="index" item="item" open="(">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.bootdo.system.domain.UserDO" useGeneratedKeys="true" keyProperty="userId">
+        INSERT INTO sys_user
+        (
+            `username`,
+            `name`,
+            `password`,
+            `dept_id`,
+            `email`,
+            `mobile`,
+            `status`,
+            `user_id_create`,
+            `gmt_create`,
+            `gmt_modified`,
+            `sex`,
+            `birth`,
+            `pic_id`,
+            `live_address`,
+            `hobby`,
+            `province`,
+            `city`,
+            `district`,
+            `bank_name`,
+            `dev_no`,
+            `remark`,
+            `unique_no`,
+            `deadline`,
+            `bank_address`,
+            `is_delete`,
+            `city_number`
+        )
+        VALUES
+            (
+                #{username},
+                #{name},
+                #{password},
+                #{deptId},
+                #{email},
+                #{mobile},
+                #{status},
+                #{userIdCreate},
+                #{gmtCreate},
+                #{gmtModified},
+                #{sex},
+                #{birth},
+                #{picId},
+                #{liveAddress},
+                #{hobby},
+                #{province},
+                #{city},
+                #{district},
+                #{bankName},
+                #{devNo},
+                #{remark},
+                #{uniqueNo},
+                #{deadline},
+                #{bankAddress},
+                #{isDelete},
+                #{cityNumber}
+            )
+    </insert>
+
+    <update id="update" parameterType="com.bootdo.system.domain.UserDO">
+        update sys_user
+        <set>
+            <if test="username != null">`username` = #{username},</if>
+            <if test="name != null">`name` = #{name},</if>
+            <if test="password != null">`password` = #{password},</if>
+            <if test="deptId != null">`dept_id` = #{deptId},</if>
+            <if test="email != null">`email` = #{email},</if>
+            <if test="mobile != null">`mobile` = #{mobile},</if>
+            <if test="status != null">`status` = #{status},</if>
+            <if test="userIdCreate != null">`user_id_create` = #{userIdCreate},</if>
+            <if test="gmtCreate != null">`gmt_create` = #{gmtCreate},</if>
+            <if test="gmtModified != null">`gmt_modified` = #{gmtModified},</if>
+            <if test="sex != null">`sex` = #{sex},</if>
+            <if test="birth != null">`birth` = #{birth},</if>
+            <if test="picId != null">`pic_id` = #{picId},</if>
+            <if test="liveAddress != null">`live_address` = #{liveAddress},</if>
+            <if test="hobby != null">`hobby` = #{hobby},</if>
+            <if test="province != null">`province` = #{province},</if>
+            <if test="city != null">`city` = #{city},</if>
+            <if test="district != null">`district` = #{district},</if>
+            <if test="bankName != null and bankName != ''">bank_name = #{bankName},</if>
+            <if test="devNo != null">dev_no = #{devNo},</if>
+            <if test="remark != null and remark != ''">remark = #{remark},</if>
+            <if test="uniqueNo != null and uniqueNo != ''">unique_no = #{uniqueNo},</if>
+            <if test="deadline != null">deadline = #{deadline},</if>
+            <if test="bankAddress != null">bank_address = #{bankAddress},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="cityNumber != null and cityNumber != ''">city_number = #{cityNumber}</if>
+        </set>
+        where user_id = #{userId}
+    </update>
+
+    <!--<delete id="remove">-->
+    <!--delete from sys_user where user_id = #{value}-->
+    <!--</delete>-->
+
+    <update id="remove">
+        UPDATE sys_user
+        SET is_delete = '1', gmt_modified = sysdate()
+        WHERE user_id = #{value}
+    </update>
+
+    <!--<delete id="batchRemove">-->
+    <!--delete from sys_user where user_id in-->
+    <!--<foreach item="userId" collection="array" open="(" separator="," close=")">-->
+    <!--#{userId}-->
+    <!--</foreach>-->
+    <!--</delete>-->
+
+    <update id="batchRemove">
+        UPDATE sys_user SET is_delete = '1',gmt_modified = sysdate() WHERE user_id IN
+        <foreach collection="array" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </update>
+
+    <select id="listAllDept" resultType="long">
+        SELECT DISTINCT dept_id
+        FROM sys_user
+    </select>
+</mapper>

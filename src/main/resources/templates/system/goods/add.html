@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+
+<style>
+    .over-flow{
+        overflow: hidden;
+    }
+    .float-left{
+        float: left;
+    }
+    .shop-img{
+        width: 36px;height: 36px;float: left;padding: 2px;margin-left: 6px;cursor: pointer
+    }
+    #option{
+        padding: 6px 0;
+        text-align: right;
+    }
+    .add-btn{
+        color: #1ab394;display: inline-block;font-size: 36px;cursor: pointer;float: left
+    }
+</style>
+<div class="wrapper wrapper-content ">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <form class="form-horizontal m-t" id="signupForm">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">商品名称：</label>
+                            <div class="col-sm-8">
+                                <input id="goodsName" name="goodsName" placeholder="商品名称" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">商品类型：</label>
+                            <div class="col-sm-8" id="voucher">
+                                <input id="goodsType" name="goodsType" class="form-control" type="hidden">
+                                <select data-placeholder="--请选择--" name="choseProduct" id="choseType"
+                                        class="form-control chosen-select" style="cursor: pointer" tabindex="2" required>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">商品品牌：</label>
+                            <div class="col-sm-8">
+                                <input id="goodsBrand" placeholder="商品品牌" name="goodsBrand" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">商品描述：</label>
+                            <div class="col-sm-8">
+                                <input id="goodsDesc" placeholder="商品描述" name="goodsDesc" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">商品原价：</label>
+                            <div class="col-sm-8">
+                                <input id="goodsCost" placeholder="商品原价" name="goodsCost" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">商品售价：</label>
+                            <div class="col-sm-8">
+                                <input id="goodsPrice" placeholder="商品售价" name="goodsPrice" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">商品详情：</label>
+                            <div class="col-sm-8">
+                                <input id="goodsText" placeholder="商品详情"  name="goodsText" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">商品口令：</label>
+                            <div class="col-sm-8">
+                                <input id="goodsCode"  placeholder="商品口令"   name="goodsCode" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">商品状态：</label>
+                            <div class="col-sm-8">
+                                <input type="hidden" name="goodsStatus" id="goodsStatus" value="0">
+                                <div class="switch switch-large" id="mySwitch">
+                                    <input type="checkbox" checked data-on-text="上架" data-off-text="下架"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">是否精品：</label>
+                            <div class="col-sm-8">
+                                <input type="hidden" name="goodsStatus" id="goodsTop" value="0">
+                                <div class="switch switch-large" id="mySwitch1">
+                                    <input type="checkbox" checked data-on-text="否" data-off-text="是"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">封面图片：</label>
+                            <div class="col-sm-8 over-flow">
+                                <span class="fa fa-plus-square add-btn" id="goodsImgBtn" style=""></span>
+                                <img  data-index="0" class="layui-upload-img shop-img float-left" id="goodsImgUrl">
+                                <input type="file" style="display: none" id="goodsImg">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">详情图片：</label>
+                            <div class="col-sm-8 over-flow">
+                                <span class="fa fa-plus-square add-btn" id="goodsDetailBtn" style=""></span>
+                                <img  data-index="1" class="layui-upload-img shop-img float-left" id="goodsDetailUrl">
+                                <input type="file" style="display: none" id="goodsDetail">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">轮播图片：</label>
+                            <div class="col-sm-8" style="overflow: hidden">
+                                <span class="fa fa-plus-square add-btn" id="addCarouselImg" ></span>
+                                <input type="hidden"  id="goodsCarousel">
+                                <input type="file" multiple id="detailInput" style="display: none">
+                                <ul class="over-flow" id="imgBox">
+
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-3">
+                                <button type="button" class="btn btn-primary" id="commit">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div id="showBox" style="display: none;padding: 0 6px 6px 6px">
+    <div id="option">
+
+    </div>
+    <input type="file" style="display: none" id="upload">
+    <img id="showImg" style="display: block;width: 100%">
+</div>
+
+<div th:include="include::footer"></div>
+<script th:inline="javascript"> var appPrefix = [[${prefix}]]; </script>
+<script type="text/javascript" th:src="@{${prefix} + '/js/appjs/system/goods/add.js'}"  ></script>
+</body>
+</html>
